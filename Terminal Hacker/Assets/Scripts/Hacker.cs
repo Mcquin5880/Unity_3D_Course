@@ -1,10 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Hacker : MonoBehaviour
 {
     int level;
+    string password;
+    string[] level1Passwords = { "books", "aisle", "shelf", "password", "font", "borrow" };
+    string[] level2Passwords = { "prisoner", "handcuffs", "holster", "uniform", "arrest" };
     enum Screen { MainMenu, Password, Win };
     Screen currentScreen;
 
@@ -33,18 +34,19 @@ public class Hacker : MonoBehaviour
         {
             RunMainMenu(input);
         }
+        else if (currentScreen == Screen.Password)
+        {
+            CheckPassword(input);
+        }
     }
 
     private void RunMainMenu(string input)
     {
-        if (input == "1")
+        bool isValidLevelNumber = (input == "1" || input == "2");
+
+        if (isValidLevelNumber)
         {
-            level = 1;
-            StartGame();
-        }
-        else if (input == "2")
-        {
-            level = 2;
+            level = int.Parse(input);
             StartGame();
         }
         else
@@ -56,6 +58,61 @@ public class Hacker : MonoBehaviour
     private void StartGame()
     {
         currentScreen = Screen.Password;
-        Terminal.WriteLine("You have chosen level " + level);
+        Terminal.ClearScreen();
+        SetRandomPassword();
+
+        Terminal.WriteLine("Please enter your password.");
+        Terminal.WriteLine("Hint: " + password.Anagram());
+    }
+
+    private void SetRandomPassword()
+    {
+        switch (level)
+        {
+            case 1:
+                password = level1Passwords[Random.Range(0, level1Passwords.Length)];
+                break;
+            case 2:
+                password = level2Passwords[Random.Range(0, level2Passwords.Length)];
+                break;
+            default:
+                Debug.Log("You broke it :(");
+                break;
+        }
+    }
+
+    private void CheckPassword(string input)
+    {
+        if (input == password)
+        {
+            DisplayWinScreen();
+        }
+        else
+        {
+            Terminal.WriteLine("Please try again.");
+        }
+    }
+
+    private void DisplayWinScreen()
+    {
+        currentScreen = Screen.Win;
+        Terminal.ClearScreen();
+        ShowWinImage();
+    }
+
+    private void ShowWinImage()
+    {
+        switch (level)
+        {
+            case 1:
+                Terminal.WriteLine("Level 1 Complete!");
+                break;
+            case 2:
+                Terminal.WriteLine("Level 2 Complete!");
+                break;
+            default:
+                break;
+        }
+        Terminal.WriteLine("Type 'menu' to return to the main menu.");
     }
 }
