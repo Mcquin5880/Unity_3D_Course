@@ -6,6 +6,7 @@ public class Hacker : MonoBehaviour
     string password;
     string[] level1Passwords = { "books", "aisle", "shelf", "password", "font", "borrow" };
     string[] level2Passwords = { "prisoner", "handcuffs", "holster", "uniform", "arrest" };
+    string[] level3Passwords = { "starfield", "telescope", "environment", "exploration", "astronauts" };
     enum Screen { MainMenu, Password, Win };
     Screen currentScreen;
 
@@ -19,9 +20,10 @@ public class Hacker : MonoBehaviour
         currentScreen = Screen.MainMenu;
         Terminal.ClearScreen();
         Terminal.WriteLine("Whatcha want to hack into?\n");
-        Terminal.WriteLine("Press 1 to hack into your local library\n");
-        Terminal.WriteLine("Press 2 to hack into your local police station\n");
-        Terminal.WriteLine("Enter your selection:\n");
+        Terminal.WriteLine("Press 1 to hack library");
+        Terminal.WriteLine("Press 2 to hack police station");
+        Terminal.WriteLine("Press 3 to hack NASA\n");
+        Terminal.WriteLine("Enter your selection:");
     }
 
     private void OnUserInput(string input)
@@ -42,7 +44,7 @@ public class Hacker : MonoBehaviour
 
     private void RunMainMenu(string input)
     {
-        bool isValidLevelNumber = (input == "1" || input == "2");
+        bool isValidLevelNumber = (input == "1" || input == "2" || input == "3");
 
         if (isValidLevelNumber)
         {
@@ -74,6 +76,9 @@ public class Hacker : MonoBehaviour
                 break;
             case 2:
                 password = level2Passwords[Random.Range(0, level2Passwords.Length)];
+                break;
+            case 3:
+                password = level3Passwords[Random.Range(0, level3Passwords.Length)];
                 break;
             default:
                 Debug.Log("You broke it :(");
@@ -109,6 +114,9 @@ public class Hacker : MonoBehaviour
                 break;
             case 2:
                 Terminal.WriteLine("Level 2 Complete!");
+                break;
+            case 3:
+                Terminal.WriteLine("Level 3 Complete!");
                 break;
             default:
                 break;
