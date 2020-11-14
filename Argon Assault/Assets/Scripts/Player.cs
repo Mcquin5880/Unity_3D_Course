@@ -5,6 +5,9 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class Player : MonoBehaviour
 {
+
+    // Piloting properties 
+
     [SerializeField] float steeringSpeed = 10f;
     [SerializeField] float xClampRange = 5.35f;
     [SerializeField] float yClampRange = 4f;
@@ -15,6 +18,15 @@ public class Player : MonoBehaviour
     [SerializeField] float controlRollFactor = -5f;
 
     float xThrow, yThrow;
+
+    // Weapons properties
+
+    [SerializeField] GameObject laserPrefab;
+    [SerializeField] Transform laserSpawnPoint_1, laserSpawnPoint_2;
+    [SerializeField] float projectileSpeed = 50f;
+    [SerializeField] float projectileFiringPeriod = 0.1f;
+
+    Coroutine firingCoroutine;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +39,7 @@ public class Player : MonoBehaviour
     {
         ProcessSteering();
         ProcessRotation();
+        FireLaser();
     }
 
     private void ProcessSteering()
@@ -50,5 +63,31 @@ public class Player : MonoBehaviour
         float yaw = transform.localPosition.x * positionYawFactor;
         float roll = xThrow * controlRollFactor;
         transform.localRotation = Quaternion.Euler(pitch, yaw, roll);
+    }
+
+    private void FireLaser()
+    {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            firingCoroutine = StartCoroutine(FireLasers());
+        }
+        if (Input.GetButtonUp("Fire1"))
+        {
+            StopCoroutine(firingCoroutine);
+        }
+    }
+
+    IEnumerator FireLasers()
+    {
+        while (true)
+        {
+            GameObject laser1 = Instantiate(laserPrefab, laserSpawnPoint_1.position, Quaternion.identity);
+            GameObject laser2 = Instantiate(laserPrefab, laserSpawnPoint_2.position, Quaternion.identity);
+
+            laser1.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, projectileSpeed);
+            laser2.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, projectileSpeed);
+
+            yield return new WaitForSeconds(projectileFiringPeriod);
+        }
     }
 }
