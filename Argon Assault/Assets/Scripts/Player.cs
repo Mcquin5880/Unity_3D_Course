@@ -27,19 +27,23 @@ public class Player : MonoBehaviour
     [SerializeField] float projectileFiringPeriod = 0.1f;
 
     Coroutine firingCoroutine;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    bool controlEnabled = true;
 
     // Update is called once per frame
     void Update()
     {
-        ProcessSteering();
-        ProcessRotation();
-        FireLaser();
+        if (controlEnabled)
+        {
+            ProcessSteering();
+            ProcessRotation();
+            FireLaser();
+        }
+    }
+
+    private void OnPlayerDeath()
+    {
+        controlEnabled = false;
+        StopAllCoroutines();
     }
 
     private void ProcessSteering()
