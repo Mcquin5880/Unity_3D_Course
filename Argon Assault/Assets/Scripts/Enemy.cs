@@ -5,12 +5,29 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] GameObject deathFX;
+    [SerializeField] int healthPoints = 5;
     [SerializeField] int enemyScoreValue;
+
+    ScoreBoard scoreboard;
+
+    private void Start()
+    {
+        scoreboard = FindObjectOfType<ScoreBoard>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
+        healthPoints--;
+        if (healthPoints <= 0)
+        {
+            KillEnemy();
+        }
+    }
+
+    private void KillEnemy()
+    {
         GameObject fx = Instantiate(deathFX, transform.position, Quaternion.identity);
-        FindObjectOfType<ScoreBoard>().ScoreHit(enemyScoreValue);
+        scoreboard.ScoreHit(enemyScoreValue);
         Destroy(gameObject);
     }
 }

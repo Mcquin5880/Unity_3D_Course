@@ -59,6 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathFX: {fileID: 8797712774088205098, guid: 8f194bd5ed16f4241abcc18b997edaa7, type: 3}
+  healthPoints: 10
   enemyScoreValue: 25
 --- !u!1001 &1296249645964688336
 PrefabInstance:
